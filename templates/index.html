@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}">
+    <title>Sea battle</title>
+
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="{{url_for('static', filename='styles/icon/apple-touch-icon.png')}}">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{url_for('static', filename='styles/icon/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{url_for('static', filename='styles/icon/favicon-16x16.png')}}">
+    <link rel="manifest" href="{{url_for('static', filename='styles/site.webmanifest')}}">
+    <link rel="mask-icon" href="{{url_for('static', filename='styles/icon/safari-pinned-tab.svg')}}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#ffffff">
+</head>
+
+<body style="background-color:#272A31">
+    <main class="main">
+        <main class="f_img">
+            <figure>
+            </figure>
+            <div class="round_icon">
+                <img src="{{url_for('static', filename='styles/images/icon1_round.jpg')}}">
+            </div>
+        </main>
+        <h1 class="sea">
+            Sea battle: классическая игра для 2х игроков
+        </h1>
+        <div class="small_icons">
+            <img src="{{url_for('static', filename='styles/images/card.png')}}">
+        </div>
+        <div class="fone">
+            <img src="{{url_for('static', filename='styles/images/fone.jpg')}}" class="image">
+        </div>
+
+        <div class="info-container">
+            <div class="text">
+                <h1>
+                    Участвуйте в игре Sea battle!
+                </h1>
+            </div>
+            <h4 class="text1">
+                Не пропустите возможность принять участие в замечательной игре Sea battle. Приведите в бой свой флот,
+                используйте стратегию и тактику, чтобы победить противника. Нажмите на кнопку ниже, чтобы начать игру.
+            </h4>
+            <button data-bs-toggle="modal" data-bs-target="#exampleModalToggle" class="button-start">Начать
+                игру</button>
+        </div>
+
+        <div class="modal fade" id="exampleModalToggle" aria-labelledby="exampleModalToggleLabel" tabindex="-1"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Вход</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Логин</label>
+                            <input type="text" class="form-control" id="recipient-name" name="login-login">
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Пароль</label>
+                            <input type="password" class="form-control" id="recipient-name" name="login-password">
+                        </div>
+                        <div class="mb-3">
+                            <a data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" href="">Нет аккаунта?</a>
+                        </div>
+                        <div class="mb-3">
+                            <label class="col-form-label" id="login-error"></label>
+                        </div>
+                        <div class="modal-footer">
+                            <a type="button" class="btn btn-warning"
+                                data-bs-target="#exampleModalToggle3" onclick="onLogin()">Войти</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModalToggle2" aria-labelledby="exampleModalToggleLabel2" tabindex="-1"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Регистрация</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Введите логин</label>
+                            <input type="text" class="form-control" id="recipient-name" name="logup-login">
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Придумайте пароль</label>
+                            <input type="password" class="form-control" id="recipient-name" name="logup-password"
+                                oninput="handlePassword()">
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Повторите пароль</label>
+                            <input type="password" class="form-control" id="recipient-name" name="logup-password-repeat"
+                                oninput="handlePassword()">
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Код администратора</label>
+                            <input type="text" class="form-control" id="Form" disabled>
+                        </div>
+                        <div class="mb-3">
+
+                            <label class="col-form" id="logup-error"></label>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="checkbox" id="admin" onchange="toggleFormActivation()" readonly> Я
+                                    администратор
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a type="button" data-bs-target="#exampleModalToggle3"
+                            class="btn btn-warning" onclick="onLogup()">Зарегистрироваться</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="qa">
+            <img src="{{url_for('static', filename='styles/images/q.jpg')}}" class="image">
+        </div>
+        <main class="ans">
+            <h1 class="qt">
+                Ответы на вопросы об игре Sea battle:
+            </h1>
+            <h4 class="qt1">
+                Если у Вас возникли вопросы относительно игры Sea battle, мы здесь, чтобы помочь вам. Вот некоторые из
+                самых часто задаваемых вопросов:
+            </h4>
+            <h3 class="qt2">
+                Как я могу переместить свой корабль?
+            </h3>
+            <h4 class="at">
+                Вы можете переместить свой корабль, перетащив его мышкой на желаемое место на игровом поле.
+            </h4>
+            <h3 class="qt3">
+                Как я могу атаковать корабли противника?
+            </h3>
+            <h4 class="at1">
+                Вы можете атаковать корабли противника, нажав на клетку, где, по вашему мнению, может находиться корабль
+                противника.
+            </h4>
+            <h3 class="qt4">
+                Что случится, если все мои корабли будут уничтожены?
+            </h3>
+            <h4 class="at2">
+                Если все ваши корабли будут уничтожены, игра закончится, и вы будете объявлены проигравшим.
+            </h4>
+        </main>
+    </main>
+    <script src="{{url_for('static', filename='js/index.js')}}"></script>
+    <script src="{{url_for('static', filename='js/admin.js')}}"></script>
+</body>
+
+</html>

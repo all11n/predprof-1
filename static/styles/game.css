@@ -1,0 +1,151 @@
+:root {
+    --btn-start-bg-color: #e9c10e;
+    --btn-start-fg-color: #202020;
+    --text-main-color: #EBF1FF;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    font-family: "PT Sans", "Arial", sans-serif;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.image {
+    max-width: 100%;
+}
+
+figure {
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.f_img {
+    background-image: url('svg/header.svg');
+    width: 100%;
+    background-size: cover;
+    text-align: center;
+}
+
+
+.round_icon {
+    width: 100px;
+    height: 200px;
+    margin: auto;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 5%;
+    left: 45%;
+}
+
+.sea {
+    color: var(--text-main-color);
+    text-align: center;
+    width: 100%;
+    margin: auto;
+    margin-top: 5%;
+    position: absolute;
+    top: 40%;
+    font-weight: 900;
+}
+
+.block{
+    height: 25%;
+    width: 100%;
+    background: #080808;
+    position: absolute;
+    opacity: 0.4;
+    top: 60%;
+}
+.fone {
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    top: 70%;
+    background: #080808d3;
+    width: 100%;
+    height: 700px;
+}
+
+.text {
+    color: var(--text-main-color);
+    width: 100%;
+    position: absolute;
+    top: 10%;
+}
+
+.text1 {
+    color: var(--text-main-color);
+    width: 90%;
+    margin-top: 5%;
+    margin-left: 5%;
+    text-align: center;
+    position: absolute;
+    top: 10%;
+}
+
+.info-container {
+    width: 100%;
+    position: absolute;
+    top: 190%;
+    text-align: center;
+    display: flex;
+    justify-content: center
+}
+.button-start {
+    border-radius: 10px;
+    background-color: var(--btn-start-bg-color);
+    color: var(--btn-start-fg-color);
+    padding: 7px 13px;
+    font-size: 15pt;
+    border: 1px solid var(--btn-start-bg-color);
+    margin-top: 20%;
+    z-index: 999;
+    position: absolute;
+    transition: 0.5s;
+    top: 5%;
+}
+
+.button-start:hover {
+    background-color: #201c24;
+    color: var(--btn-start-bg-color);
+    transition: 0.5s;
+}
+.dropdown-center{
+    border-radius: 10px;
+    padding: 7px 13px;
+    font-size: 15pt;
+    margin-top: 20%;
+    z-index: 999;
+    position: absolute;
+    transition: 0.5s;
+    top: 5%;
+}
+
+.field {
+    margin: auto;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.cell {
+    margin: 1px;
+    cursor: pointer;
+    display: inline;
+}
+
+.field__row {
+    height: 42px;
+}
+
+.modal {
+    width: 100%;
+}
