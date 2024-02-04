@@ -1,5 +1,6 @@
 localStorage.setItem("data-mode", document.documentElement.getAttribute("data-mode"));
 let modes = ["normal", "add-ship", "select-ship", "ship-ready"];
+let elems = [];
 
 function onFieldCreation() {
 
@@ -31,41 +32,63 @@ function modeChange() { // on mode change button click
 
 function onOptionChange(el) {
     let size = el.value;
-    if (size == 0) setMode("normal");
+    setMode("normal");
     let field = document.querySelector(".field");
     field.innerHTML = "";
     for (let i = 0; i < size; ++i) {
-        let row = document.createElement("div");
+        let row = document.createElement("tr");
         row.classList.add("field__row");
         for (let j = 0; j < size; ++j) {
-            let img = new Image();
-            img.style.height = "40px";
-            img.src = "/static/styles/images/cell-empty.png";
-            let elem = document.createElement("div");
+            let elem = document.createElement("td");
             elem.classList.add("cell");
             elem.setAttribute("x", j);
             elem.setAttribute("y", i);
-            elem.appendChild(img);
 
             elem.addEventListener("click", () => { // on cell click
                 if (getMode() == "add-ship") {
-                    let img1 = new Image();
-                    img1.style.height = "40px";
-                    img1.src = "/static/styles/images/cell-ship.png";
-                    elem.innerHTML = "";
-                    elem.appendChild(img1);
+                    elem.style = "background-color: var(--cell-ship)";
                     let button = document.querySelector(".button-start");
                     button.classList.remove("button-start");
                     button.classList.add("button-unavailable");
-                    button.removeEventListener("click", modeChange);
+                    button.disabled = true;
                     localStorage.setItem("x", elem.getAttribute("x")); // x of selected cell
                     localStorage.setItem("y", elem.getAttribute("y")); // y of selected cell
                     setMode("select-ship");
                 }
             });
-            elem.addEventListener("hover", () => {
-                if (getMode() == "select-ship") { // if a cell was selected
-                    // get elements by x or y values
+            elem.addEventListener("mouseover", () => {
+                let selectedX = localStorage.getItem("x");
+                let hoverX = elem.getAttribute("x");
+                let selectedY = localStorage.getItem("y");
+                let hoverY = elem.getAttribute("y");
+                if (getMode() == "select-ship" && (hoverX != selectedX || hoverY != selectedY)) { // if a cell was selected
+                    elems.forEach((e) => {
+                        e.style = "background-color: var(--cell-empty)";
+                    });
+                    elems = [];
+                    if (hoverY == selectedY) {
+                        let row = elem.parentElement;
+                        Array.prototype.forEach.call(row.children, (e) => {
+                            let thisX = e.getAttribute("x");
+                            if (thisX > hoverX && thisX < selectedX || thisX < hoverX && thisX > selectedX && Math.abs(selectedX - thisX) <= 3) {
+                                elems.push(e);
+                            }
+                        });
+                        elems.push(elem);
+                    }
+                    else if (hoverX == selectedX) {
+                        Array.prototype.forEach.call(document.getElementsByClassName("cell"), (e) => {
+                            let thisX = e.getAttribute("x");
+                            let thisY = e.getAttribute("y");
+                            if (thisX == hoverX && (thisY > hoverY && thisY < selectedY || thisY < hoverY && thisY > selectedY) && Math.abs(selectedY - thisY) <= 3) {
+                                elems.push(e);
+                            }
+                        });
+                        elems.push(elem);
+                    }
+                    elems.forEach((el) => {
+                        el.style = "background-color: var(--cell-ship)";
+                    });
                 }
             });
             row.appendChild(elem);

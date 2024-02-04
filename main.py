@@ -123,17 +123,7 @@ def game_post():
 @login_required
 @admin_only
 def create_field_page():
-    # data = request.get_json()
-    # size = data.get("size")
-    # size = 7
-    # field = Field(size=size, users=json.dumps({1 : 2}))
-    # db.session.add(field)
-    # db.session.commit()
-    # for y in range(size):
-    #     for x in range(size):
-    #         cell = Cell(x=x, y=y, field_id=field.id, shot_by=0, ship_id=0)
-    #         db.session.add(cell)
-    # db.session.commit()
+    
     return render_template("game_add.html")
 
 @app.route("/create_field", methods=["POST"]) # post request handler for /create_field

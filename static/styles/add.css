@@ -3,6 +3,8 @@
     --btn-start-fg-color: #202020;
     --text-main-color: #EBF1FF;
     --btn-confirm-bg-color: #44c040;
+    --cell-empty: #dfdfdf;
+    --cell-ship: #ff3b3b;
 }
 
 [data-mode="add-ship"] {
@@ -187,7 +189,10 @@ figure {
 .cell {
     margin: 1px;
     cursor: pointer;
-    display: inline;
+    height: 40px;
+    width: 40px;
+    border: 1px solid #1d1d1d;
+    background-color: #dfdfdf;
 }
 
 .cell:hover {
