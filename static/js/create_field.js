@@ -1,8 +1,9 @@
-let modes = ["normal", "add-ship", "select-ship", "ship-ready"];
+let modes = ["normal", "add-ship", "select-ship", "ship-ready", "add-prize"];
 let elems = [];
 
 document.onload = () => {
     localStorage.setItem("data-mode", "normal");
+    localStorage.setItem("cells", JSON.parse([]));
 };
 
 function onFieldCreation() {
@@ -34,8 +35,13 @@ function modeChange() { // on mode change button click
 }
 
 function onOptionChange(el) {
+    localStorage.setItem("cells", JSON.stringify([]));
+    elems = [];
     let size = el.value;
     setMode("normal");
+    document.querySelector("#add-ship").classList.remove("disabled");
+    document.querySelector("#add-ship").disabled = false;
+    document.querySelector("#prize-select").disabled = true;
     let field = document.querySelector(".field");
     field.innerHTML = "";
     for (let i = 0; i < size; ++i) {
@@ -48,7 +54,7 @@ function onOptionChange(el) {
             elem.setAttribute("y", i);
 
             elem.addEventListener("click", () => { // on cell click
-                if (getMode() == "add-ship") {
+                if (getMode() == "add-ship" && !elem.getAttribute("occupied")) {
                     elem.style = "background-color: var(--cell-ship)";
                     let button = document.querySelector(".button-start");
                     button.classList.add("disabled");
@@ -57,8 +63,24 @@ function onOptionChange(el) {
                     localStorage.setItem("y", elem.getAttribute("y")); // y of selected cell
                     setMode("select-ship");
                 }
-                else if (getMode() == "select-ship") {
-                    
+                else if (getMode() == "select-ship" && !elem.getAttribute("occupied")) {
+                    let cells = JSON.parse(localStorage.getItem("cells"));
+                    cells.push({
+                        "x" : localStorage.getItem("x"),
+                        "y" : localStorage.getItem("y")
+                    });
+                    elems.forEach((e) => {
+                        cells.push({
+                            "x" : e.getAttribute("x"),
+                            "y" : e.getAttribute("y")
+                        });
+                        e.setAttribute("selected", false);
+                        e.setAttribute("occupied", true);
+                    });
+                    console.log(cells);
+                    localStorage.setItem("cells", JSON.stringify(cells));
+                    document.querySelector("#prize-select").disabled = false;
+                    setMode("add-prize");
                 }
             });
             elem.addEventListener("mouseover", () => {
@@ -66,9 +88,9 @@ function onOptionChange(el) {
                 let hoverX = elem.getAttribute("x");
                 let selectedY = localStorage.getItem("y");
                 let hoverY = elem.getAttribute("y");
-                if (getMode() == "select-ship") { // if a cell was selected
+                if (getMode() == "select-ship" && !elem.getAttribute("occupied")) { // if a cell was selected
                     elems.forEach((e) => {
-                        if (e.getAttribute("x") != selectedX || e.getAttribute("y") != selectedY) {
+                        if ((e.getAttribute("x") != selectedX || e.getAttribute("y") != selectedY) && !e.getAttribute("occupied")) {
                             e.style = "background-color: var(--cell-empty)";
                             e.setAttribute("selected", false);
                         }
