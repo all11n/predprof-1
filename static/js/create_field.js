@@ -74,7 +74,9 @@ function onOptionChange(el) {
                                 elems.push(e);
                             }
                         });
-                        elems.push(elem);
+                        if (Math.abs(selectedX - hoverX) <= 3) {
+                            elems.push(elem);
+                        }
                     }
                     else if (hoverX == selectedX) {
                         Array.prototype.forEach.call(document.getElementsByClassName("cell"), (e) => {
@@ -84,7 +86,9 @@ function onOptionChange(el) {
                                 elems.push(e);
                             }
                         });
-                        elems.push(elem);
+                        if (Math.abs(selectedY - hoverY) <= 3) {
+                            elems.push(elem);
+                        }
                     }
                     elems.forEach((el) => {
                         el.style = "background-color: var(--cell-ship)";
