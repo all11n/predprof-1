@@ -1,23 +1,52 @@
 let modes = ["normal", "add-ship", "select-ship", "ship-ready", "add-prize"];
 let elems = [];
+let selected;
 
 document.onload = () => {
     localStorage.setItem("data-mode", "normal");
-    localStorage.setItem("cells", JSON.parse([]));
+    localStorage.setItem("cells", JSON.stringify([]));
+    localStorage.setItem("x", "");
+    localStorage.setItem("y", "");
 };
 
 function onFieldCreation() {
 
 }
 
+function cancelAddition() {
+    elems.forEach((e) => {
+        e.setAttribute("selected", false);
+        e.setAttribute("occupied", false);
+        e.style = "background-color: var(--cell-empty)";
+    });
+    let cells = JSON.parse(localStorage.getItem("cells"));
+    cells.pop();
+    localStorage.setItem("cells", JSON.stringify(cells));
+    setMode("normal");
+}
+
 function setMode(mode) { // change edition mode
     if (modes.includes(mode)) {
         localStorage.setItem("data-mode", mode);
         document.documentElement.setAttribute("data-mode", mode);
+        document.querySelector(".button-cancel").disabled = mode != "add-prize";
+        document.querySelector("#add-ship").disabled = mode != "normal";
+    }
+    if (mode == "add-prize") {
+        document.querySelector(".button-cancel").classList.remove("disabled");
+    }
+    else {
+        document.querySelector(".button-cancel").classList.add("disabled");
+    }
+    if (mode != "normal") {
+        document.querySelector("#add-ship").classList.add("disabled");
+    }
+    else {
+        document.querySelector("#add-ship").classList.remove("disabled");
     }
 }
 
-function getMode() {
+function getMode() { // get edition mode
     let mode = localStorage.getItem("data-mode");
     if (document.documentElement.getAttribute("data-mode") != mode) {
         document.documentElement.setAttribute("data-mode", mode);
@@ -25,13 +54,8 @@ function getMode() {
     return mode;
 }
 
-function modeChange() { // on mode change button click
-    if (document.querySelector(".form-select").value != 0) {
-        let mode = document.documentElement.getAttribute("data-mode");
-        localStorage.setItem("data-mode", mode);
-        let new_mode = modes[(modes.findIndex(i => i === mode) + 1) % modes.length];
-        setMode(new_mode);
-    }
+function onCreateButtonClick() {
+    setMode("add-ship");
 }
 
 function onOptionChange(el) {
@@ -52,9 +76,8 @@ function onOptionChange(el) {
             elem.classList.add("cell");
             elem.setAttribute("x", j);
             elem.setAttribute("y", i);
-
             elem.addEventListener("click", () => { // on cell click
-                if (getMode() == "add-ship" && !elem.getAttribute("occupied")) {
+                if (getMode() == "add-ship" && elem.getAttribute("occupied") != "true") {
                     elem.style = "background-color: var(--cell-ship)";
                     let button = document.querySelector(".button-start");
                     button.classList.add("disabled");
@@ -62,13 +85,12 @@ function onOptionChange(el) {
                     localStorage.setItem("x", elem.getAttribute("x")); // x of selected cell
                     localStorage.setItem("y", elem.getAttribute("y")); // y of selected cell
                     setMode("select-ship");
+                    selected = elem;
                 }
                 else if (getMode() == "select-ship" && !elem.getAttribute("occupied")) {
-                    let cells = JSON.parse(localStorage.getItem("cells"));
-                    cells.push({
-                        "x" : localStorage.getItem("x"),
-                        "y" : localStorage.getItem("y")
-                    });
+                    let cells_arr = JSON.parse(localStorage.getItem("cells"));
+                    let cells = [];
+                    elems.push(selected);
                     elems.forEach((e) => {
                         cells.push({
                             "x" : e.getAttribute("x"),
@@ -77,8 +99,9 @@ function onOptionChange(el) {
                         e.setAttribute("selected", false);
                         e.setAttribute("occupied", true);
                     });
-                    console.log(cells);
-                    localStorage.setItem("cells", JSON.stringify(cells));
+                    cells_arr.push(cells);
+                    console.log(cells_arr);
+                    localStorage.setItem("cells", JSON.stringify(cells_arr));
                     document.querySelector("#prize-select").disabled = false;
                     setMode("add-prize");
                 }
@@ -100,7 +123,7 @@ function onOptionChange(el) {
                         let row = elem.parentElement;
                         Array.prototype.forEach.call(row.children, (e) => {
                             let thisX = e.getAttribute("x");
-                            if (thisX > hoverX && thisX < selectedX || thisX < hoverX && thisX > selectedX && Math.abs(selectedX - thisX) <= 3) {
+                            if ((thisX > hoverX && thisX < selectedX || thisX < hoverX && thisX > selectedX) && Math.abs(selectedX - thisX) <= 3) {
                                 elems.push(e);
                             }
                         });
