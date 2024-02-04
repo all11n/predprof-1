@@ -139,7 +139,10 @@ figure {
 .cell {
     margin: 1px;
     cursor: pointer;
-    display: inline;
+    height: 40px;
+    width: 40px;
+    border: 1px solid #1d1d1d;
+    background-color: #dfdfdf;
 }
 
 .field__row {

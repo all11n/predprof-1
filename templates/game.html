@@ -33,25 +33,25 @@
         Sea battle: классическая игра для 2х игроков
     </h1>
     <div class="fone">
-        <div class="field">
+        <table class="field">
             {% for row in rows %}
-            <div class="field__row">
+            <tr class="field__row">
                 {% for cell in row %}
-                <div class="cell" onclick="onShot(this)" data-id="{{cell['id']}}">
+                <td class="cell" onclick="onShot(this)" data-id="{{cell['id']}}">
                     {% if cell["shot_by"] == 0 %}
-                    <img src="{{url_for('static', filename='styles/images/cell-unshot.png')}}" alt="" height="40px">
+                    
                     {% else %}
                     {% if cell["ship_id"] == 0 %}
-                    <img src="{{url_for('static', filename='styles/images/cell-empty.png')}}" alt="" height="40px">
+                    
                     {% else %}
-                    <img src="{{url_for('static', filename='styles/images/cell-ship.png')}}" alt="" height="40px">
+                    
                     {% endif %}
                     {% endif %}
-                </div>
+                </td>
                 {% endfor %}
-            </div>
+            </tr>
             {% endfor %}
-        </div>
+        </table>
     </div>
     <div class="modal fade" id="exampleModalToggle3" aria-labelledby="exampleModalToggleLabel3" tabindex="-1"
         style="display: none;" aria-hidden="true">

@@ -154,20 +154,9 @@ figure {
     transition: 0.5s;
 }
 
-.button-unavailable {
-    border-radius: 10px;
-    background-color: var(--btn-start-bg-color);
-    color: var(--btn-start-fg-color);
-    padding: 7px 13px;
-    font-size: 12pt;
-    border: 1px solid var(--btn-start-bg-color);
-    z-index: 999;
-    position: absolute;
-    transition: 0.5s;
-    margin-left: calc(50% - 80px);
+.disabled {
+    opacity: 0.7;
     cursor: not-allowed;
-    margin-top: 50px;
-    opacity: 0.6;
 }
 
 .dropdown-center{

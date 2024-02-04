@@ -1,6 +1,9 @@
-localStorage.setItem("data-mode", document.documentElement.getAttribute("data-mode"));
 let modes = ["normal", "add-ship", "select-ship", "ship-ready"];
 let elems = [];
+
+document.onload = () => {
+    localStorage.setItem("data-mode", "normal");
+};
 
 function onFieldCreation() {
 
@@ -15,10 +18,10 @@ function setMode(mode) { // change edition mode
 
 function getMode() {
     let mode = localStorage.getItem("data-mode");
-    if (document.documentElement.getAttribute("data-mode") == mode) {
-        return mode;
+    if (document.documentElement.getAttribute("data-mode") != mode) {
+        document.documentElement.setAttribute("data-mode", mode);
     }
-    return null;
+    return mode;
 }
 
 function modeChange() { // on mode change button click
@@ -48,12 +51,14 @@ function onOptionChange(el) {
                 if (getMode() == "add-ship") {
                     elem.style = "background-color: var(--cell-ship)";
                     let button = document.querySelector(".button-start");
-                    button.classList.remove("button-start");
-                    button.classList.add("button-unavailable");
+                    button.classList.add("disabled");
                     button.disabled = true;
                     localStorage.setItem("x", elem.getAttribute("x")); // x of selected cell
                     localStorage.setItem("y", elem.getAttribute("y")); // y of selected cell
                     setMode("select-ship");
+                }
+                else if (getMode() == "select-ship") {
+                    
                 }
             });
             elem.addEventListener("mouseover", () => {
@@ -61,9 +66,12 @@ function onOptionChange(el) {
                 let hoverX = elem.getAttribute("x");
                 let selectedY = localStorage.getItem("y");
                 let hoverY = elem.getAttribute("y");
-                if (getMode() == "select-ship" && (hoverX != selectedX || hoverY != selectedY)) { // if a cell was selected
+                if (getMode() == "select-ship") { // if a cell was selected
                     elems.forEach((e) => {
-                        e.style = "background-color: var(--cell-empty)";
+                        if (e.getAttribute("x") != selectedX || e.getAttribute("y") != selectedY) {
+                            e.style = "background-color: var(--cell-empty)";
+                            e.setAttribute("selected", false);
+                        }
                     });
                     elems = [];
                     if (hoverY == selectedY) {
@@ -91,6 +99,7 @@ function onOptionChange(el) {
                         }
                     }
                     elems.forEach((el) => {
+                        el.setAttribute("selected", true);
                         el.style = "background-color: var(--cell-ship)";
                     });
                 }
