@@ -131,10 +131,10 @@ function onOptionChange(el) {
                 }
             });
             elem.addEventListener("mouseover", () => {
-                let selectedX = localStorage.getItem("x");
-                let hoverX = elem.getAttribute("x");
-                let selectedY = localStorage.getItem("y");
-                let hoverY = elem.getAttribute("y");
+                let selectedX = Number(localStorage.getItem("x"));
+                let hoverX = Number(elem.getAttribute("x"));
+                let selectedY = Number(localStorage.getItem("y"));
+                let hoverY = Number(elem.getAttribute("y"));
                 if (getMode() == "select-ship" && elem.getAttribute("occupied") != "true") { // if a cell was selected
                     elems.forEach((e) => {
                         if ((e.getAttribute("x") != selectedX || e.getAttribute("y") != selectedY) && e.getAttribute("occupied") != "true") {
@@ -146,7 +146,7 @@ function onOptionChange(el) {
                     if (hoverY == selectedY) {
                         let row = elem.parentElement;
                         Array.prototype.forEach.call(row.children, (e) => {
-                            let thisX = e.getAttribute("x");
+                            let thisX = Number(e.getAttribute("x"));
                             if ((thisX > hoverX && thisX < selectedX || thisX < hoverX && thisX > selectedX) && Math.abs(selectedX - thisX) <= 3) {
                                 elems.push(e);
                             }
@@ -157,8 +157,8 @@ function onOptionChange(el) {
                     }
                     else if (hoverX == selectedX) {
                         Array.prototype.forEach.call(document.getElementsByClassName("cell"), (e) => {
-                            let thisX = e.getAttribute("x");
-                            let thisY = e.getAttribute("y");
+                            let thisX = Number(e.getAttribute("x"));
+                            let thisY = Number(e.getAttribute("y"));
                             if (thisX == hoverX && (thisY > hoverY && thisY < selectedY || thisY < hoverY && thisY > selectedY) && Math.abs(selectedY - thisY) <= 3) {
                                 elems.push(e);
                             }
