@@ -52,23 +52,23 @@
     <div class="fone">
         <div class="button-container">
             <button class="button-start" onclick="onCreateButtonClick()" id="add-ship">Добавить корабль</button>
-            <button class="button-cancel disabled" onclick="cancelAddition()" id="cancel-button" disabled>Отмена</button>
+            <button class="button-cancel disabled" onclick="cancelAddition()" id="cancel-button"
+                disabled>Отмена</button>
         </div>
         <table class="field">
         </table>
     </div>
     <div class="info-container">
-        <div class="select-prize">
-            <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false" disabled id="prize-select">
-                Добавить приз
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item">Приз "1000" рублей</a></li>
-                <li><a class="dropdown-item">Приз "2000 рублей"</a></li>
-                <li><a class="dropdown-item">Приз "3000 рублей"</a></li>
-            </ul>
-        </div>
+        <select class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+            disabled id="prize-select" onchange="selectPrize(this)">
+            <option class="dropdown-item" value="0">Добавить приз</option>
+            <option class="dropdown-item" value="1000">Приз "1000" рублей</option>
+            <option class="dropdown-item" value="2000">Приз "2000" рублей</option>
+            <option class="dropdown-item" value="3000">Приз "3000" рублей</option>
+        </select>
+        <ul class="dropdown-menu" onchange="selectPrize(this)">
+
+        </ul>
     </div>
 
     <script src="{{url_for('static', filename='js/create_field.js')}}"></script>

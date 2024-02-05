@@ -13,16 +13,42 @@ function onFieldCreation() {
 
 }
 
+function selectPrize(el) {
+    
+}
+
 function cancelAddition() {
     elems.forEach((e) => {
-        e.setAttribute("selected", false);
-        e.setAttribute("occupied", false);
         e.style = "background-color: var(--cell-empty)";
     });
+    markCells(elems, false, false);
     let cells = JSON.parse(localStorage.getItem("cells"));
     cells.pop();
     localStorage.setItem("cells", JSON.stringify(cells));
     setMode("normal");
+}
+
+function markCells(cells, selected, occupied) {
+    let maxX = -1;
+    let minX = 100;
+    let maxY = -1;
+    let minY = 100;
+    cells.forEach((e) => {
+        let thisX = Number(e.getAttribute("x"));
+        let thisY = Number(e.getAttribute("y"));  
+        if (thisX > maxX) maxX = thisX;
+        if (thisX < minX) minX = thisX;
+        if (thisY > maxY) maxY = thisY;
+        if (thisY < minY) minY = thisY;
+    });
+    Array.prototype.forEach.call(document.getElementsByClassName("cell"), (e) => {
+        let thisX = Number(e.getAttribute("x"));
+        let thisY = Number(e.getAttribute("y"));
+        if (thisX >= minX - 1 && thisX <= maxX + 1 && thisY >= minY - 1 && thisY <= maxY + 1) {
+            e.setAttribute("selected", selected);
+            e.setAttribute("occupied", occupied);
+        }
+    });
 }
 
 function setMode(mode) { // change edition mode
@@ -87,7 +113,7 @@ function onOptionChange(el) {
                     setMode("select-ship");
                     selected = elem;
                 }
-                else if (getMode() == "select-ship" && !elem.getAttribute("occupied")) {
+                else if (getMode() == "select-ship" && elem.getAttribute("occupied") != "true") {
                     let cells_arr = JSON.parse(localStorage.getItem("cells"));
                     let cells = [];
                     elems.push(selected);
@@ -96,11 +122,9 @@ function onOptionChange(el) {
                             "x" : e.getAttribute("x"),
                             "y" : e.getAttribute("y")
                         });
-                        e.setAttribute("selected", false);
-                        e.setAttribute("occupied", true);
                     });
+                    markCells(elems, false, true);
                     cells_arr.push(cells);
-                    console.log(cells_arr);
                     localStorage.setItem("cells", JSON.stringify(cells_arr));
                     document.querySelector("#prize-select").disabled = false;
                     setMode("add-prize");
@@ -111,9 +135,9 @@ function onOptionChange(el) {
                 let hoverX = elem.getAttribute("x");
                 let selectedY = localStorage.getItem("y");
                 let hoverY = elem.getAttribute("y");
-                if (getMode() == "select-ship" && !elem.getAttribute("occupied")) { // if a cell was selected
+                if (getMode() == "select-ship" && elem.getAttribute("occupied") != "true") { // if a cell was selected
                     elems.forEach((e) => {
-                        if ((e.getAttribute("x") != selectedX || e.getAttribute("y") != selectedY) && !e.getAttribute("occupied")) {
+                        if ((e.getAttribute("x") != selectedX || e.getAttribute("y") != selectedY) && e.getAttribute("occupied") != "true") {
                             e.style = "background-color: var(--cell-empty)";
                             e.setAttribute("selected", false);
                         }
