@@ -88,14 +88,17 @@ function markCells(cells, selected, occupied) {
         let thisY = Number(e.getAttribute("y"));
         if (thisX >= minX - 1 && thisX <= maxX + 1 && thisY >= minY - 1 && thisY <= maxY + 1) {
             e.setAttribute("selected", selected);
-            if (e.getAttribute("occupied") == "true" && occupied) {
-                e.setAttribute("common", true);
-            }
-            if (e.getAttribute("common") == "true" && !occupied) {
-                e.setAttribute("common", "false");
+            if (occupied) {
+                e.setAttribute("owned", Number(e.getAttribute("owned")) + 1);
+                e.setAttribute("occupied", true);
             }
             else {
-                e.setAttribute("occupied", occupied);
+                if (Number(e.getAttribute("owned")) > 1) {
+                    e.setAttribute("owned", Number(e.getAttribute("owned")) - 1);
+                }
+                else {
+                    e.setAttribute("occupied", false);
+                }
             }
         }
     });
