@@ -55,6 +55,7 @@ function selectPrize(el) { // assign prize to ship
         localStorage.setItem("prizes", JSON.stringify(prizes_arr));
         setMode("normal");
         el.value = "0";
+        elems = [];
     }
 }
 
@@ -87,7 +88,15 @@ function markCells(cells, selected, occupied) {
         let thisY = Number(e.getAttribute("y"));
         if (thisX >= minX - 1 && thisX <= maxX + 1 && thisY >= minY - 1 && thisY <= maxY + 1) {
             e.setAttribute("selected", selected);
-            e.setAttribute("occupied", occupied);
+            if (e.getAttribute("occupied") == "true" && occupied) {
+                e.setAttribute("common", true);
+            }
+            if (e.getAttribute("common") == "true" && !occupied) {
+                e.setAttribute("common", "false");
+            }
+            else {
+                e.setAttribute("occupied", occupied);
+            }
         }
     });
 }
@@ -161,7 +170,6 @@ function onOptionChange(el) {
                     localStorage.setItem("cells", JSON.stringify(cells_arr));
                     document.querySelector("#prize-select").disabled = false;
                     setMode("add-prize");
-                    elems = [];
                 }
                 else if (mode == "normal" && elem.getAttribute("occupied") == "true") { // delete ship
                     let cells_arr = JSON.parse(localStorage.getItem("cells"));
@@ -170,7 +178,6 @@ function onOptionChange(el) {
                     find:
                     for (let i = 0; i < cells_arr.length; ++i) {
                         for (let j = 0; j < cells_arr[i].length; ++j) {
-                            console.log(cells_arr[i][j]["x"], elem.getAttribute("x"), cells_arr[i][j]["y"], elem.getAttribute("y"));
                             if (cells_arr[i][j]["x"] == elem.getAttribute("x") && cells_arr[i][j]["y"] == elem.getAttribute("y")) {
                                 cells = cells_arr[i];
                                 index = i;
@@ -190,8 +197,8 @@ function onOptionChange(el) {
                         obj.style = "background-color: var(--cell-empty)";
                     });
                     markCells(cells_obj, false, false);
-                    console.log(localStorage.getItem("cells"));
                     console.log(localStorage.getItem("prizes"));
+                    console.log(localStorage.getItem("cells"));
                 }
             });
             elem.addEventListener("mouseover", () => {
