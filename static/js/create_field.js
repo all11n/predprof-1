@@ -1,20 +1,61 @@
-let modes = ["normal", "add-ship", "select-ship", "ship-ready", "add-prize"];
+let modes = ["normal", "add-ship", "select-ship", "ship-ready", "add-prize", "edit-ship"];
 let elems = [];
+let prizes = { 1000: "promo1000", 2000: "promo2000", 3000: "promo3000" };
 let selected;
 
 document.onload = () => {
     localStorage.setItem("data-mode", "normal");
     localStorage.setItem("cells", JSON.stringify([]));
+    localStorage.setItem("prizes", JSON.stringify([]));
     localStorage.setItem("x", "");
     localStorage.setItem("y", "");
 };
+
+function setMode(mode) { // change edition mode
+    if (modes.includes(mode)) {
+        localStorage.setItem("data-mode", mode);
+        document.documentElement.setAttribute("data-mode", mode);
+        document.querySelector(".button-cancel").disabled = mode != "add-prize";
+        document.querySelector("#add-ship").disabled = mode != "normal";
+        document.querySelector("#prize-select").disabled = mode != "add-prize" && mode != "edit-ship";
+    }
+    if (mode == "add-prize" || mode == "edit-ship") {
+        document.querySelector(".button-cancel").classList.remove("disabled");
+        document.querySelector("#prize-select").classList.remove("disabled");
+    }
+    else {
+        document.querySelector(".button-cancel").classList.add("disabled");
+        document.querySelector("#prize-select").classList.remove("disabled");
+    }
+    if (mode != "normal") {
+        document.querySelector("#add-ship").classList.add("disabled");
+    }
+    else {
+        document.querySelector("#add-ship").classList.remove("disabled");
+    }
+    
+}
 
 function onFieldCreation() {
 
 }
 
-function selectPrize(el) {
-    
+function selectPrize(el) { // assign prize to ship
+    let value = el.value;
+    if (getMode() == "add-prize" && value != "0") {
+        let prize = document.createElement("div");
+        let image_path = "/static/styles/images/" + prizes[el.value] + ".png";
+        let img = new Image(39, 39);
+        img.src = image_path;
+        prize.appendChild(img);
+        prize.setAttribute("type", value);
+        selected.appendChild(prize);
+        let prizes_arr = JSON.parse(localStorage.getItem("prizes")) || [];
+        prizes_arr.push(value);
+        localStorage.setItem("prizes", JSON.stringify(prizes_arr));
+        setMode("normal");
+        el.value = "0";
+    }
 }
 
 function cancelAddition() {
@@ -35,7 +76,7 @@ function markCells(cells, selected, occupied) {
     let minY = 100;
     cells.forEach((e) => {
         let thisX = Number(e.getAttribute("x"));
-        let thisY = Number(e.getAttribute("y"));  
+        let thisY = Number(e.getAttribute("y"));
         if (thisX > maxX) maxX = thisX;
         if (thisX < minX) minX = thisX;
         if (thisY > maxY) maxY = thisY;
@@ -49,27 +90,6 @@ function markCells(cells, selected, occupied) {
             e.setAttribute("occupied", occupied);
         }
     });
-}
-
-function setMode(mode) { // change edition mode
-    if (modes.includes(mode)) {
-        localStorage.setItem("data-mode", mode);
-        document.documentElement.setAttribute("data-mode", mode);
-        document.querySelector(".button-cancel").disabled = mode != "add-prize";
-        document.querySelector("#add-ship").disabled = mode != "normal";
-    }
-    if (mode == "add-prize") {
-        document.querySelector(".button-cancel").classList.remove("disabled");
-    }
-    else {
-        document.querySelector(".button-cancel").classList.add("disabled");
-    }
-    if (mode != "normal") {
-        document.querySelector("#add-ship").classList.add("disabled");
-    }
-    else {
-        document.querySelector("#add-ship").classList.remove("disabled");
-    }
 }
 
 function getMode() { // get edition mode
@@ -119,8 +139,8 @@ function onOptionChange(el) {
                     elems.push(selected);
                     elems.forEach((e) => {
                         cells.push({
-                            "x" : e.getAttribute("x"),
-                            "y" : e.getAttribute("y")
+                            "x": e.getAttribute("x"),
+                            "y": e.getAttribute("y")
                         });
                     });
                     markCells(elems, false, true);
@@ -145,23 +165,33 @@ function onOptionChange(el) {
                     elems = [];
                     if (hoverY == selectedY) {
                         let row = elem.parentElement;
-                        Array.prototype.forEach.call(row.children, (e) => {
+                        Array.prototype.every.call(row.children, (e) => {
                             let thisX = Number(e.getAttribute("x"));
                             if ((thisX > hoverX && thisX < selectedX || thisX < hoverX && thisX > selectedX) && Math.abs(selectedX - thisX) <= 3) {
                                 elems.push(e);
                             }
+                            if (e.getAttribute("occupied") == "true") {
+                                elems = [];
+                                return false;
+                            }
+                            return true;
                         });
                         if (Math.abs(selectedX - hoverX) <= 3) {
                             elems.push(elem);
                         }
                     }
                     else if (hoverX == selectedX) {
-                        Array.prototype.forEach.call(document.getElementsByClassName("cell"), (e) => {
+                        Array.prototype.every.call(document.getElementsByClassName("cell"), (e) => {
                             let thisX = Number(e.getAttribute("x"));
                             let thisY = Number(e.getAttribute("y"));
                             if (thisX == hoverX && (thisY > hoverY && thisY < selectedY || thisY < hoverY && thisY > selectedY) && Math.abs(selectedY - thisY) <= 3) {
                                 elems.push(e);
                             }
+                            if (e.getAttribute("occupied") == "true") {
+                                elems = [];
+                                return false;
+                            }
+                            return true;
                         });
                         if (Math.abs(selectedY - hoverY) <= 3) {
                             elems.push(elem);
