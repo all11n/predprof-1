@@ -123,7 +123,8 @@ function onOptionChange(el) {
             elem.setAttribute("x", j);
             elem.setAttribute("y", i);
             elem.addEventListener("click", () => { // on cell click
-                if (getMode() == "add-ship" && elem.getAttribute("occupied") != "true") {
+                let mode = getMode();
+                if (mode == "add-ship" && elem.getAttribute("occupied") != "true") { // select a start ship cell
                     elem.style = "background-color: var(--cell-ship)";
                     let button = document.querySelector(".button-start");
                     button.classList.add("disabled");
@@ -133,7 +134,7 @@ function onOptionChange(el) {
                     setMode("select-ship");
                     selected = elem;
                 }
-                else if (getMode() == "select-ship" && elem.getAttribute("occupied") != "true") {
+                else if (mode == "select-ship" && elem.getAttribute("occupied") != "true") { // confirm ship
                     let cells_arr = JSON.parse(localStorage.getItem("cells"));
                     let cells = [];
                     elems.push(selected);
@@ -148,6 +149,10 @@ function onOptionChange(el) {
                     localStorage.setItem("cells", JSON.stringify(cells_arr));
                     document.querySelector("#prize-select").disabled = false;
                     setMode("add-prize");
+                }
+                else if (mode == "normal" && elem.getAttribute("occupied") == "true") { // edit ship
+                    setMode("edit-ship");
+                    
                 }
             });
             elem.addEventListener("mouseover", () => {
@@ -164,8 +169,7 @@ function onOptionChange(el) {
                     });
                     elems = [];
                     if (hoverY == selectedY) {
-                        let row = elem.parentElement;
-                        let children = row.children;
+                        let children = elem.parentElement.children;
                         for (let i = 0; i < children.length; ++i) {
                             let e = children[i];
                             let thisX = Number(e.getAttribute("x"));
