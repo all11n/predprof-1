@@ -98,6 +98,7 @@ function markCells(cells, selected, occupied) {
                 }
                 else {
                     e.setAttribute("occupied", false);
+                    e.setAttribute("owned", 0);
                 }
             }
         }
@@ -200,8 +201,6 @@ function onOptionChange(el) {
                         obj.style = "background-color: var(--cell-empty)";
                     });
                     markCells(cells_obj, false, false);
-                    console.log(localStorage.getItem("prizes"));
-                    console.log(localStorage.getItem("cells"));
                 }
             });
             elem.addEventListener("mouseover", () => {
