@@ -1,9 +1,9 @@
-let modes = ["normal", "add-ship", "select-ship", "ship-ready", "add-prize", "edit-ship"];
+let modes = ["normal", "add-ship", "select-ship", "ship-ready", "add-prize"];
 let elems = [];
 let prizes = { 1000: "promo1000", 2000: "promo2000", 3000: "promo3000" };
 let selected;
 
-document.onload = () => {
+window.onload = () => {
     localStorage.setItem("data-mode", "normal");
     localStorage.setItem("cells", JSON.stringify([]));
     localStorage.setItem("prizes", JSON.stringify([]));
@@ -17,9 +17,9 @@ function setMode(mode) { // change edition mode
         document.documentElement.setAttribute("data-mode", mode);
         document.querySelector(".button-cancel").disabled = mode != "add-prize";
         document.querySelector("#add-ship").disabled = mode != "normal";
-        document.querySelector("#prize-select").disabled = mode != "add-prize" && mode != "edit-ship";
+        document.querySelector("#prize-select").disabled = mode != "add-prize";
     }
-    if (mode == "add-prize" || mode == "edit-ship") {
+    if (mode == "add-prize") {
         document.querySelector(".button-cancel").classList.remove("disabled");
         document.querySelector("#prize-select").classList.remove("disabled");
     }
@@ -33,7 +33,7 @@ function setMode(mode) { // change edition mode
     else {
         document.querySelector("#add-ship").classList.remove("disabled");
     }
-    
+
 }
 
 function onFieldCreation() {
@@ -50,7 +50,7 @@ function selectPrize(el) { // assign prize to ship
         prize.appendChild(img);
         prize.setAttribute("type", value);
         selected.appendChild(prize);
-        let prizes_arr = JSON.parse(localStorage.getItem("prizes")) || [];
+        let prizes_arr = JSON.parse(localStorage.getItem("prizes"));
         prizes_arr.push(value);
         localStorage.setItem("prizes", JSON.stringify(prizes_arr));
         setMode("normal");
@@ -90,6 +90,18 @@ function markCells(cells, selected, occupied) {
             e.setAttribute("occupied", occupied);
         }
     });
+}
+
+function getCellByCoord(x, y) {
+    let res;
+    Array.prototype.every.call(document.getElementsByClassName("cell"), (e) => {
+        if (Number(e.getAttribute("x")) == Number(x) && Number(e.getAttribute("y")) == Number(y)) {
+            res = e;
+            return false;
+        }
+        return true;
+    });
+    return res;
 }
 
 function getMode() { // get edition mode
@@ -149,10 +161,37 @@ function onOptionChange(el) {
                     localStorage.setItem("cells", JSON.stringify(cells_arr));
                     document.querySelector("#prize-select").disabled = false;
                     setMode("add-prize");
+                    elems = [];
                 }
-                else if (mode == "normal" && elem.getAttribute("occupied") == "true") { // edit ship
-                    setMode("edit-ship");
-                    
+                else if (mode == "normal" && elem.getAttribute("occupied") == "true") { // delete ship
+                    let cells_arr = JSON.parse(localStorage.getItem("cells"));
+                    let cells = [], index;
+                    let cells_obj = [];
+                    find:
+                    for (let i = 0; i < cells_arr.length; ++i) {
+                        for (let j = 0; j < cells_arr[i].length; ++j) {
+                            console.log(cells_arr[i][j]["x"], elem.getAttribute("x"), cells_arr[i][j]["y"], elem.getAttribute("y"));
+                            if (cells_arr[i][j]["x"] == elem.getAttribute("x") && cells_arr[i][j]["y"] == elem.getAttribute("y")) {
+                                cells = cells_arr[i];
+                                index = i;
+                                break find;
+                            }
+                        }
+                    }
+                    cells_arr.splice(index, 1);
+                    let new_prizes = JSON.parse(localStorage.getItem("prizes"));
+                    new_prizes.splice(index, 1);
+                    localStorage.setItem("prizes", JSON.stringify(new_prizes));
+                    localStorage.setItem("cells", JSON.stringify(cells_arr));
+                    cells.forEach((e) => {
+                        let obj = getCellByCoord(e["x"], e["y"]);
+                        cells_obj.push(obj);
+                        obj.innerHTML = "";
+                        obj.style = "background-color: var(--cell-empty)";
+                    });
+                    markCells(cells_obj, false, false);
+                    console.log(localStorage.getItem("cells"));
+                    console.log(localStorage.getItem("prizes"));
                 }
             });
             elem.addEventListener("mouseover", () => {
@@ -187,7 +226,7 @@ function onOptionChange(el) {
                     }
                     else if (hoverX == selectedX) {
                         let children = document.getElementsByClassName("cell");
-                        for (let i = 0; i< children.length; ++i) {
+                        for (let i = 0; i < children.length; ++i) {
                             let e = children[i];
                             let thisX = Number(e.getAttribute("x"));
                             let thisY = Number(e.getAttribute("y"));
@@ -197,7 +236,7 @@ function onOptionChange(el) {
                                     elems = [];
                                     break;
                                 }
-                            } 
+                            }
                         }
                         if (Math.abs(selectedY - hoverY) <= 3) {
                             elems.push(elem);
