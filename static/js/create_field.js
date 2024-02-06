@@ -165,34 +165,36 @@ function onOptionChange(el) {
                     elems = [];
                     if (hoverY == selectedY) {
                         let row = elem.parentElement;
-                        Array.prototype.every.call(row.children, (e) => {
+                        let children = row.children;
+                        for (let i = 0; i < children.length; ++i) {
+                            let e = children[i];
                             let thisX = Number(e.getAttribute("x"));
                             if ((thisX > hoverX && thisX < selectedX || thisX < hoverX && thisX > selectedX) && Math.abs(selectedX - thisX) <= 3) {
                                 elems.push(e);
+                                if (e.getAttribute("occupied") == "true") {
+                                    elems = [];
+                                    break;
+                                }
                             }
-                            if (e.getAttribute("occupied") == "true") {
-                                elems = [];
-                                return false;
-                            }
-                            return true;
-                        });
+                        }
                         if (Math.abs(selectedX - hoverX) <= 3) {
                             elems.push(elem);
                         }
                     }
                     else if (hoverX == selectedX) {
-                        Array.prototype.every.call(document.getElementsByClassName("cell"), (e) => {
+                        let children = document.getElementsByClassName("cell");
+                        for (let i = 0; i< children.length; ++i) {
+                            let e = children[i];
                             let thisX = Number(e.getAttribute("x"));
                             let thisY = Number(e.getAttribute("y"));
                             if (thisX == hoverX && (thisY > hoverY && thisY < selectedY || thisY < hoverY && thisY > selectedY) && Math.abs(selectedY - thisY) <= 3) {
                                 elems.push(e);
-                            }
-                            if (e.getAttribute("occupied") == "true") {
-                                elems = [];
-                                return false;
-                            }
-                            return true;
-                        });
+                                if (e.getAttribute("occupied") == "true") {
+                                    elems = [];
+                                    break;
+                                }
+                            } 
+                        }
                         if (Math.abs(selectedY - hoverY) <= 3) {
                             elems.push(elem);
                         }
