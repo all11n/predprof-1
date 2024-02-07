@@ -53,22 +53,9 @@ class Prize(db.Model):
     __tablename__ = "prize"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    image_id = db.Column(db.Integer, db.ForeignKey("image.id"), nullable=False)
     ship = db.relationship("Ship", backref="prize", lazy=True, uselist=False)
     got_by = db.Column(db.Integer, nullable=True)
     desc = db.Column(db.String, nullable=False)
 
     def __repr__(self):
         return f"<Prize {self.id}>"
-
-
-class Image(db.Model):
-    __tablename__ = "image"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    mimetype = db.Column(db.String, nullable=False)
-    image = db.Column(db.String, nullable=False)
-    prize_id = db.relationship("Prize", backref="image", lazy=True, uselist=False)
-
-    def __repr__(self):
-        return f"<Image {self.id}>"

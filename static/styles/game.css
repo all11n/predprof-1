@@ -2,6 +2,9 @@
     --btn-start-bg-color: #e9c10e;
     --btn-start-fg-color: #202020;
     --text-main-color: #EBF1FF;
+    --cell-empty: #dfdfdf;
+    --cell-ship: #ff3b3b;
+    --cell-not-shot: #a5a5a5;
 }
 
 html {
@@ -142,7 +145,7 @@ figure {
     height: 40px;
     width: 40px;
     border: 1px solid #1d1d1d;
-    background-color: #dfdfdf;
+    background-color: var(--cell-not-shot);
 }
 
 .field__row {

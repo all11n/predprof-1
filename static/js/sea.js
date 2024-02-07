@@ -22,16 +22,12 @@ function onShot(el) {
             document.querySelector("#error-label").innerHTML = resp["message"];
         }
         else if (xhr.status == 200 && xhr.readyState == 4) {
-            el.innerHTML = "";
-            let img = new Image();
-            img.style.height = "40px";
             if (resp["status"] == 0) {
-                img.src = "/static/styles/images/cell-empty.png";
+                el.style.backgroundColor = "var(--cell-empty)";
             }
             else if (resp["status"] == 1) {
-                img.src = "/static/styles/images/cell-ship.png";
+                el.style.backgroundColor = "var(--cell-ship)";
             }
-            el.appendChild(img);
         }
     };
     xhr.send(body);

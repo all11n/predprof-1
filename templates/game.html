@@ -37,17 +37,18 @@
             {% for row in rows %}
             <tr class="field__row">
                 {% for cell in row %}
+                {% if cell["shot_by"] == 0 %}
                 <td class="cell" onclick="onShot(this)" data-id="{{cell['id']}}">
-                    {% if cell["shot_by"] == 0 %}
-                    
-                    {% else %}
-                    {% if cell["ship_id"] == 0 %}
-                    
-                    {% else %}
-                    
-                    {% endif %}
-                    {% endif %}
                 </td>
+                {% else %}
+                {% if cell["ship_id"] == 0 %}
+                <td class="cell" onclick="onShot(this)" data-id="{{cell['id']}}" style="background-color: var(--cell-empty);">
+                </td>
+                {% else %}
+                <td class="cell" onclick="onShot(this)" data-id="{{cell['id']}}" style="background-color: var(--cell-ship);">
+                </td>
+                {% endif %}
+                {% endif %}
                 {% endfor %}
             </tr>
             {% endfor %}

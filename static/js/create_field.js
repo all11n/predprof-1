@@ -1,6 +1,6 @@
 let modes = ["normal", "add-ship", "select-ship", "ship-ready", "add-prize"];
 let elems = [];
-let prizes = { 1000: "promo1000", 2000: "promo2000", 3000: "promo3000" };
+let prizes = { 1000: "promo1000", 2000: "promo2000", 3000: "promo3000"};
 let selected;
 
 window.onload = () => {
@@ -77,7 +77,7 @@ function selectPrize(el) { // assign prize to ship
         prize.setAttribute("type", value);
         selected.appendChild(prize);
         let prizes_arr = JSON.parse(localStorage.getItem("prizes"));
-        prizes_arr.push(value);
+        prizes_arr.push(prizes[el.value]);
         localStorage.setItem("prizes", JSON.stringify(prizes_arr));
         setMode("normal");
         el.value = "0";

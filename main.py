@@ -123,25 +123,59 @@ def game_post():
 @login_required
 @admin_only
 def create_field_page():
-    
     return render_template("game_add.html")
 
 @app.route("/create_field", methods=["POST"]) # post request handler for /create_field
 @login_required
 @admin_only
 def create_field():
-    data = request.get_json()
-    size = data.get("size")
-    print(data)
-    return jsonify({"message" : "ok"}), 200
-
-@app.route("/get_img/<int:img_id>")
-def get_img(img_id : int):
     try:
-        img = Image.query.get(img_id)
+        data = request.get_json()
+        ships_data = data.get("cells")
+        prizes_data = data.get("prizes")
+        size = int(data.get("size"))
+        cells = []
+        field = Field( # create field
+            size=size,
+            users=json.dumps({})
+        )
+        db.session.add(field)
+        db.session.commit()
+        for y in range(size): # create cells
+            row = []
+            for x in range(size):
+                row.append(Cell(
+                    field_id=field.id,
+                    x=x,
+                    y=y,
+                    ship_id=0,
+                    shot_by=0
+                ))
+                db.session.add(row[-1])
+            cells.append(row)
+        ships = []
+        for i in range(len(ships_data)): # create ships and prizes
+            prize = Prize(
+                name=PRIZES_INFO[prizes_data[i]]["name"],
+                desc=PRIZES_INFO[prizes_data[i]]["desc"],
+                got_by=0
+            )
+            db.session.add(prize)
+            db.session.commit()
+            ship = Ship(
+                field_id=field.id,
+                prize_id=prize.id
+            )
+            ships.append(ship)
+            db.session.add(ship)
+            db.session.commit()
+        for ship in ships_data: # set ship_id for cells
+            for cell in ship:
+                cells[int(cell.get("y"))][int(cell.get("x"))].ship_id = ships[ships_data.index(ship)].id
+        db.session.commit()
+        return jsonify({"message" : "ok"}), 200
     except:
-        return None
-    return Response(img.img, mimetype=img.mimetype)
+        return jsonify({"message" : "error"}), 400
 
 @app.route("/prizes", methods=["GET"])
 @login_required
