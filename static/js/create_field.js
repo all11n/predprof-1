@@ -18,7 +18,7 @@ function setMode(mode) { // change edition mode
         document.querySelector(".button-cancel").disabled = mode != "add-prize";
         document.querySelector("#add-ship").disabled = mode != "normal";
         document.querySelector("#prize-select").disabled = mode != "add-prize";
-        document.querySelector("#confirm").dispatchEvent = mode != "normal";
+        document.querySelector("#confirm").disabled = mode != "normal";
     }
     if (mode == "add-prize") {
         document.querySelector(".button-cancel").classList.remove("disabled");
@@ -41,22 +41,29 @@ function setMode(mode) { // change edition mode
 function onFieldCreation() {
     let cells = JSON.parse(localStorage.getItem("cells"));
     let prizes = JSON.parse(localStorage.getItem("prizes"));
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "/create_field", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    let body = JSON.stringify({
-        "size" : Number(document.getElementById("select-size").value),
-        "cells" : cells,
-        "prizes" : prizes
-    });
-    xhr.onreadystatechange(() => {
-        if (xhr.readyState != 4 && xhr.status != 200) { // if there is an error
+    let size = Number(document.getElementById("select-size").value);
+    if (cells.length && prizes.length && size) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/create_field", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        let body = JSON.stringify({
+            "size": size,
+            "cells": cells,
+            "prizes": prizes
+        });
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState != 4 && xhr.status != 200) { // if there is an error
 
-        }
-        else if (xhr.readyState == 4 && xhr.status == 200) { // if everything is fine
-            window.location.reload();
-        }
-    });
+            }
+            else if (xhr.readyState == 4 && xhr.status == 200) { // if everything is fine
+                window.location.reload();
+            }
+        };
+        xhr.send(body);
+    }
+    else {
+        alert("Добавьте хотя бы один корабль!");
+    }
 }
 
 function selectPrize(el) { // assign prize to ship
