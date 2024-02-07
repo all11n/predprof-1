@@ -35,7 +35,8 @@
     </h1>
     <div class="row px-5">
         <div class="col">
-            <select class="form-select" aria-label="Пример выбора по умолчанию" onchange="onOptionChange(this)" id="select-size">
+            <select class="form-select" aria-label="Пример выбора по умолчанию" onchange="onOptionChange(this)"
+                id="select-size">
                 <option selected value="0">Размер поля</option>
                 <option value="5">5х5</option>
                 <option value="6">6х6</option>
@@ -54,10 +55,11 @@
             <button class="button-start" onclick="onCreateButtonClick()" id="add-ship">Добавить корабль</button>
             <button class="button-cancel disabled" onclick="cancelAddition()" id="cancel-button"
                 disabled>Отмена</button>
+            <button class="button-confirm disabled" onclick="onFieldCreation()" disabled id="confirm">Готово</button>
         </div>
     </div>
     <div class="fone">
-        
+
         <table class="field">
         </table>
     </div>

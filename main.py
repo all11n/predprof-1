@@ -130,9 +130,10 @@ def create_field_page():
 @login_required
 @admin_only
 def create_field():
-    # data = request.get_json()
-    # size = data.get("size")
-    pass
+    data = request.get_json()
+    size = data.get("size")
+    print(data)
+    return jsonify({"message" : "ok"}), 200
 
 @app.route("/get_img/<int:img_id>")
 def get_img(img_id : int):

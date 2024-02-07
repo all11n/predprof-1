@@ -18,6 +18,7 @@ function setMode(mode) { // change edition mode
         document.querySelector(".button-cancel").disabled = mode != "add-prize";
         document.querySelector("#add-ship").disabled = mode != "normal";
         document.querySelector("#prize-select").disabled = mode != "add-prize";
+        document.querySelector("#confirm").dispatchEvent = mode != "normal";
     }
     if (mode == "add-prize") {
         document.querySelector(".button-cancel").classList.remove("disabled");
@@ -29,9 +30,11 @@ function setMode(mode) { // change edition mode
     }
     if (mode != "normal") {
         document.querySelector("#add-ship").classList.add("disabled");
+        document.querySelector("#confirm").classList.add("disabled");
     }
     else {
         document.querySelector("#add-ship").classList.remove("disabled");
+        document.querySelector("#confirm").classList.remove("disabled");
     }
 }
 
@@ -47,8 +50,8 @@ function onFieldCreation() {
         "prizes" : prizes
     });
     xhr.onreadystatechange(() => {
-        if (xhr.readyState != 4 && xhr.status != 200) {
-            // if there is an error
+        if (xhr.readyState != 4 && xhr.status != 200) { // if there is an error
+
         }
         else if (xhr.readyState == 4 && xhr.status == 200) { // if everything is fine
             window.location.reload();

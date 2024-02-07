@@ -166,9 +166,8 @@ figure {
     z-index: 999;
     /* position: absolute; */
     transition: 0.5s;
-    margin-left: calc(50% - 80px);
+    margin: auto;
     cursor: pointer;
-    margin-top: 50px;
 }
 
 .button-confirm:hover {
