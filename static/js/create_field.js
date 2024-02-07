@@ -33,11 +33,27 @@ function setMode(mode) { // change edition mode
     else {
         document.querySelector("#add-ship").classList.remove("disabled");
     }
-
 }
 
 function onFieldCreation() {
-
+    let cells = JSON.parse(localStorage.getItem("cells"));
+    let prizes = JSON.parse(localStorage.getItem("prizes"));
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/create_field", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    let body = JSON.stringify({
+        "size" : Number(document.getElementById("select-size").value),
+        "cells" : cells,
+        "prizes" : prizes
+    });
+    xhr.onreadystatechange(() => {
+        if (xhr.readyState != 4 && xhr.status != 200) {
+            // if there is an error
+        }
+        else if (xhr.readyState == 4 && xhr.status == 200) { // if everything is fine
+            window.location.reload();
+        }
+    });
 }
 
 function selectPrize(el) { // assign prize to ship
