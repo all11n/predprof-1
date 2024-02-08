@@ -117,7 +117,18 @@ def game_post():
     field.users = json.dumps(users_data)
     db.session.commit()
     status = cell.ship_id != 0
-    return jsonify({"cell_id" : cell_id, "status" : status}), 200
+    body = {"cell_id" : cell_id, "status" : status}
+    if status:
+        ship_cells = Cell.query.filter_by(ship_id=cell.ship_id)
+        if all(x.shot_by != 0 for x in ship_cells):
+            prize = Prize.query.get(Ship.query.get(cell.ship_id).prize_id)
+            prize.got_by = current_user.get_id()
+            db.session.commit()
+            prize_info = prize.__dict__
+            del prize_info["_sa_instance_state"]
+            body["prize"] = prize_info
+    print(body)
+    return jsonify(body), 200
 
 @app.route("/create_field", methods=["GET"]) # create field page
 @login_required
@@ -158,6 +169,7 @@ def create_field():
             prize = Prize(
                 name=PRIZES_INFO[prizes_data[i]]["name"],
                 desc=PRIZES_INFO[prizes_data[i]]["desc"],
+                type=prizes_data[i],
                 got_by=0
             )
             db.session.add(prize)

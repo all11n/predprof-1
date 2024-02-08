@@ -56,6 +56,7 @@ class Prize(db.Model):
     ship = db.relationship("Ship", backref="prize", lazy=True, uselist=False)
     got_by = db.Column(db.Integer, nullable=True)
     desc = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=False)
 
     def __repr__(self):
         return f"<Prize {self.id}>"

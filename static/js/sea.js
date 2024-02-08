@@ -22,6 +22,7 @@ function onShot(el) {
             document.querySelector("#error-label").innerHTML = resp["message"];
         }
         else if (xhr.status == 200 && xhr.readyState == 4) {
+            console.log(resp);
             if (resp["status"] == 0) {
                 el.style.backgroundColor = "var(--cell-empty)";
             }
