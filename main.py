@@ -48,14 +48,14 @@ def logup():
     is_admin = data.get("is_admin")
     code = data.get("code")
     if len(User.query.filter_by(login=login).all()) != 0:
-        return jsonify({"message" : "Этот логин уже использован"}), 401
+        return jsonify({"message" : "Этот логин уже используется"}), 401
     if is_admin and code != CODE:
-        return jsonify({"message" : "Неверный код админа"}), 401
+        return jsonify({"message" : "Неверный код администратора"}), 401
     if len(password) >= 8:
         user = User(login=login, password=generate_password_hash(data.get("password")), is_admin=is_admin)
         db.session.add(user)
         db.session.commit()
-        return jsonify({"message" : "Регистрация успешна"}), 200
+        return jsonify({"message" : "Успешная регистрация"}), 200
     else:
         return jsonify({"message" : "Пароль должен быть длиной от 8 символов"}), 401
 
@@ -69,7 +69,7 @@ def auth():
         if check_password_hash(user.password, password):
             user_login = UserLogin().create(user)
             login_user(user_login)
-            return jsonify({"message" : "Вход успешен"}), 200
+            return jsonify({"message" : "Вход выполнен успешно"}), 200
         return jsonify({"message" : "Неверный логин или пароль"}), 401
     except:
         return jsonify({"message" : "Неверный логин или пароль"}), 401
